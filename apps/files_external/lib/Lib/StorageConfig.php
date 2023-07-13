@@ -397,7 +397,7 @@ class StorageConfig implements \JsonSerializable {
 	/**
 	 * Serialize config to JSON
 	 */
-	public function jsonSerialize(): array {
+	public function jsonSerialize(bool $obfuscate = false): array {
 		$result = [];
 		if (!is_null($this->id)) {
 			$result['id'] = $this->id;
@@ -427,5 +427,22 @@ class StorageConfig implements \JsonSerializable {
 		$result['userProvided'] = $this->authMechanism instanceof IUserProvided;
 		$result['type'] = ($this->getType() === self::MOUNT_TYPE_PERSONAl) ? 'personal': 'system';
 		return $result;
+	}
+
+	protected function formatStorageForUI(StorageConfig $storage): StorageConfig {
+		/** @var DefinitionParameter[] $parameters */
+		$parameters = array_merge($storage->getBackend()->getParameters(), $storage->getAuthMechanism()->getParameters());
+
+		$options = $storage->getBackendOptions();
+		foreach ($options as $key => $value) {
+			foreach ($parameters as $parameter) {
+				if ($parameter->getName() === $key && $parameter->getType() === DefinitionParameter::VALUE_PASSWORD) {
+					$storage->setBackendOption($key, DefinitionParameter::UNMODIFIED_PLACEHOLDER);
+					break;
+				}
+			}
+		}
+
+		return $storage;
 	}
 }
