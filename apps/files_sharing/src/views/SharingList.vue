@@ -27,7 +27,8 @@
 			:file-info="fileInfo"
 			:share="share"
 			:is-unique="isUnique(share)"
-			@remove:share="removeShare" />
+			@remove:share="removeShare" 
+			@open-sharing-details="$emit('open-sharing-details')"/>
 	</ul>
 </template>
 

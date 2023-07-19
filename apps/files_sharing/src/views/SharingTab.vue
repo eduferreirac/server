@@ -29,7 +29,7 @@
 		</div>
 
 		<!-- shares content -->
-		<div v-else class="sharingTab__content">
+		<div v-if="!showSharingDetailsView" class="sharingTab__content">
 			<!-- shared with me information -->
 			<SharingEntrySimple v-if="isSharedWithMe" v-bind="sharedWithMe" class="sharing-entry__reshare">
 				<template #avatar>
@@ -59,7 +59,8 @@
 			<SharingList v-if="!loading"
 				ref="shareList"
 				:shares="shares"
-				:file-info="fileInfo" />
+				:file-info="fileInfo" 
+				@open-sharing-details="toggleShareDetailsView"/>
 
 			<!-- inherited shares -->
 			<SharingInherited v-if="canReshare && !loading" :file-info="fileInfo" />
@@ -72,6 +73,11 @@
 				:id="`${fileInfo.id}`"
 				type="file"
 				:name="fileInfo.name" />
+		</div>
+
+		<!-- share details -->
+		<div v-else>
+            <SharingDetailsTab @close-sharing-details="toggleShareDetailsView"/>
 		</div>
 
 		<!-- additional entries, use it with cautious -->
@@ -102,6 +108,7 @@ import SharingInput from '../components/SharingInput.vue'
 import SharingInherited from './SharingInherited.vue'
 import SharingLinkList from './SharingLinkList.vue'
 import SharingList from './SharingList.vue'
+import SharingDetailsTab from './SharingDetailsTab.vue'
 
 export default {
 	name: 'SharingTab',
@@ -115,6 +122,7 @@ export default {
 		SharingInput,
 		SharingLinkList,
 		SharingList,
+		SharingDetailsTab,
 	},
 
 	mixins: [ShareTypes],
@@ -137,6 +145,7 @@ export default {
 
 			sections: OCA.Sharing.ShareTabSections.getSections(),
 			projectsEnabled: loadState('core', 'projects_enabled', false),
+			showSharingDetailsView: false,
 		}
 	},
 
@@ -355,6 +364,10 @@ export default {
 				}
 			})
 		},
+
+		toggleShareDetailsView() {
+			this.showSharingDetailsView = !this.showSharingDetailsView;
+		}
 	},
 }
 </script>
