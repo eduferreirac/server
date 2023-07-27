@@ -127,6 +127,7 @@ export default Vue.extend({
 
 		passwordLabel(): string {
 			if (this.hasObfuscated) {
+				// TRANSLATORS This string is for a column header in a table of users
 				return t('settings', 'Password or insufficient permissions message')
 			}
 			return t('settings', 'Password')
