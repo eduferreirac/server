@@ -76,6 +76,9 @@ $CONFIG = [
  */
 'trusted_domains' =>
    [
+    '192.168.1.11',
+    '192.168.1.14',
+    'localhost',
     'demo.example.org',
     'otherdomain.example.org',
     '10.111.112.113',
